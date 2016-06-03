@@ -18,8 +18,8 @@ int main(){
     int endpoint1;
     int weight;
     double e_time;
-    double dist[maxnum];
-    int prev[maxnum];
+    double dist[maxnum];    //當前點到src的最短距離
+    int prev[maxnum];   //當前點的前一點
 
     cin>>vertices;
     cin>>edges;
@@ -51,11 +51,11 @@ int main(){
     }
 
     bool s[maxnum];
-
+	    // 判断是否已存入该点到S集合中
 	for(int i=0; i<vertices; i++)
 	{
 		dist[i] = A[src][i];
-		s[i] = 0;
+		s[i] = 0;     // 初始都未用过该点
 		if(dist[i] == maxint)
 			prev[i] = 0;
 		else
@@ -64,19 +64,23 @@ int main(){
 	dist[src] = 0;
 	s[src] = 1;
 
+	// 依次将未放入S集合的结点中，取dist[]最小值的结点，放入结合S中
+	// 一旦S包含了所有V中顶点，dist就记录了从源点到所有其他顶点之间的最短路径长度
+         // 注意是从第二个节点开始，第一个为源点
 	for(int i=1; i<vertices; i++)
 	{
 		int tmp = maxint;
 		int u = src;
+		// 找出当前未使用的点j的dist[j]最小值
 		for(int j=0; j<vertices; j++)
 			if((!s[j]) && dist[j]<tmp)
 			{
-				u = j;
+				u = j;              // u保存当前邻接点中距离最小的点的号码
 				tmp = dist[j];
 			}
-		s[u] = 1;
+		s[u] = 1;    // 表示u点已存入S集合中
 
-
+		// 更新dist
 		for(int j=0; j<vertices; j++)
 			if((!s[j]) && A[u][j]<maxint)
 			{
